@@ -1,0 +1,4 @@
+type Cat {
+  id: ID! @id
+  name: String!
+}
