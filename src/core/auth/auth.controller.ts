@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Req, Patch, Param, Delete } from '@nestjs/common';
-import { AuthProviderRepository} from '../../repositorties/AuthProviderRepository';
+import { AuthProviderRepository } from '../../repositorties/AuthProviderRepository';
 import { UtilsHelpers } from '../../Helpers/UtilsHelpers';
 import { Request } from 'express';
 
@@ -8,7 +8,11 @@ export class AuthController {
     constructor(
         private readonly authProviderRepository: AuthProviderRepository,
         private readonly utilsHelpers: UtilsHelpers
-    ) {}
+    ) { }
 
-   
+    @Get('/email/signup')
+    async signUpWithUsername() {
+        const response = await this.authProviderRepository.firebaseAuth.firebaseEmailAuth.signUp();
+        return response;
+    }
 }
