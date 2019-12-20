@@ -6,6 +6,10 @@ export const typeDefs = /* GraphQL */ `type AggregateCat {
   count: Int!
 }
 
+type AggregateOwner {
+  count: Int!
+}
+
 type BatchPayload {
   count: Long!
 }
@@ -26,6 +30,11 @@ input CatCreateInput {
   name: String!
 }
 
+input CatCreateManyInput {
+  create: [CatCreateInput!]
+  connect: [CatWhereUniqueInput!]
+}
+
 type CatEdge {
   node: Cat!
   cursor: String!
@@ -41,6 +50,40 @@ enum CatOrderByInput {
 type CatPreviousValues {
   id: ID!
   name: String!
+}
+
+input CatScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  AND: [CatScalarWhereInput!]
+  OR: [CatScalarWhereInput!]
+  NOT: [CatScalarWhereInput!]
 }
 
 type CatSubscriptionPayload {
@@ -61,12 +104,48 @@ input CatSubscriptionWhereInput {
   NOT: [CatSubscriptionWhereInput!]
 }
 
+input CatUpdateDataInput {
+  name: String
+}
+
 input CatUpdateInput {
   name: String
 }
 
+input CatUpdateManyDataInput {
+  name: String
+}
+
+input CatUpdateManyInput {
+  create: [CatCreateInput!]
+  update: [CatUpdateWithWhereUniqueNestedInput!]
+  upsert: [CatUpsertWithWhereUniqueNestedInput!]
+  delete: [CatWhereUniqueInput!]
+  connect: [CatWhereUniqueInput!]
+  set: [CatWhereUniqueInput!]
+  disconnect: [CatWhereUniqueInput!]
+  deleteMany: [CatScalarWhereInput!]
+  updateMany: [CatUpdateManyWithWhereNestedInput!]
+}
+
 input CatUpdateManyMutationInput {
   name: String
+}
+
+input CatUpdateManyWithWhereNestedInput {
+  where: CatScalarWhereInput!
+  data: CatUpdateManyDataInput!
+}
+
+input CatUpdateWithWhereUniqueNestedInput {
+  where: CatWhereUniqueInput!
+  data: CatUpdateDataInput!
+}
+
+input CatUpsertWithWhereUniqueNestedInput {
+  where: CatWhereUniqueInput!
+  update: CatUpdateDataInput!
+  create: CatCreateInput!
 }
 
 input CatWhereInput {
@@ -116,6 +195,12 @@ type Mutation {
   upsertCat(where: CatWhereUniqueInput!, create: CatCreateInput!, update: CatUpdateInput!): Cat!
   deleteCat(where: CatWhereUniqueInput!): Cat
   deleteManyCats(where: CatWhereInput): BatchPayload!
+  createOwner(data: OwnerCreateInput!): Owner!
+  updateOwner(data: OwnerUpdateInput!, where: OwnerWhereUniqueInput!): Owner
+  updateManyOwners(data: OwnerUpdateManyMutationInput!, where: OwnerWhereInput): BatchPayload!
+  upsertOwner(where: OwnerWhereUniqueInput!, create: OwnerCreateInput!, update: OwnerUpdateInput!): Owner!
+  deleteOwner(where: OwnerWhereUniqueInput!): Owner
+  deleteManyOwners(where: OwnerWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -126,6 +211,109 @@ enum MutationType {
 
 interface Node {
   id: ID!
+}
+
+type Owner {
+  id: ID!
+  name: String!
+  cats(where: CatWhereInput, orderBy: CatOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Cat!]
+}
+
+type OwnerConnection {
+  pageInfo: PageInfo!
+  edges: [OwnerEdge]!
+  aggregate: AggregateOwner!
+}
+
+input OwnerCreateInput {
+  id: ID
+  name: String!
+  cats: CatCreateManyInput
+}
+
+type OwnerEdge {
+  node: Owner!
+  cursor: String!
+}
+
+enum OwnerOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+}
+
+type OwnerPreviousValues {
+  id: ID!
+  name: String!
+}
+
+type OwnerSubscriptionPayload {
+  mutation: MutationType!
+  node: Owner
+  updatedFields: [String!]
+  previousValues: OwnerPreviousValues
+}
+
+input OwnerSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: OwnerWhereInput
+  AND: [OwnerSubscriptionWhereInput!]
+  OR: [OwnerSubscriptionWhereInput!]
+  NOT: [OwnerSubscriptionWhereInput!]
+}
+
+input OwnerUpdateInput {
+  name: String
+  cats: CatUpdateManyInput
+}
+
+input OwnerUpdateManyMutationInput {
+  name: String
+}
+
+input OwnerWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  cats_every: CatWhereInput
+  cats_some: CatWhereInput
+  cats_none: CatWhereInput
+  AND: [OwnerWhereInput!]
+  OR: [OwnerWhereInput!]
+  NOT: [OwnerWhereInput!]
+}
+
+input OwnerWhereUniqueInput {
+  id: ID
 }
 
 type PageInfo {
@@ -139,10 +327,14 @@ type Query {
   cat(where: CatWhereUniqueInput!): Cat
   cats(where: CatWhereInput, orderBy: CatOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Cat]!
   catsConnection(where: CatWhereInput, orderBy: CatOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CatConnection!
+  owner(where: OwnerWhereUniqueInput!): Owner
+  owners(where: OwnerWhereInput, orderBy: OwnerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Owner]!
+  ownersConnection(where: OwnerWhereInput, orderBy: OwnerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OwnerConnection!
   node(id: ID!): Node
 }
 
 type Subscription {
   cat(where: CatSubscriptionWhereInput): CatSubscriptionPayload
+  owner(where: OwnerSubscriptionWhereInput): OwnerSubscriptionPayload
 }
 `

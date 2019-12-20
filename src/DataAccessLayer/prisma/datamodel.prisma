@@ -2,3 +2,9 @@ type Cat {
   id: ID! @id
   name: String!
 }
+
+type Owner {
+  id: ID! @id
+  name: String!
+  cats: [Cat]
+}

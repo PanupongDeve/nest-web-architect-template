@@ -17,6 +17,7 @@ export type Maybe<T> = T | undefined | null;
 
 export interface Exists {
   cat: (where?: CatWhereInput) => Promise<boolean>;
+  owner: (where?: OwnerWhereInput) => Promise<boolean>;
 }
 
 export interface Node {}
@@ -57,6 +58,25 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => CatConnectionPromise;
+  owner: (where: OwnerWhereUniqueInput) => OwnerNullablePromise;
+  owners: (args?: {
+    where?: OwnerWhereInput;
+    orderBy?: OwnerOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Owner>;
+  ownersConnection: (args?: {
+    where?: OwnerWhereInput;
+    orderBy?: OwnerOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => OwnerConnectionPromise;
   node: (args: { id: ID_Output }) => Node;
 
   /**
@@ -79,6 +99,22 @@ export interface Prisma {
   }) => CatPromise;
   deleteCat: (where: CatWhereUniqueInput) => CatPromise;
   deleteManyCats: (where?: CatWhereInput) => BatchPayloadPromise;
+  createOwner: (data: OwnerCreateInput) => OwnerPromise;
+  updateOwner: (args: {
+    data: OwnerUpdateInput;
+    where: OwnerWhereUniqueInput;
+  }) => OwnerPromise;
+  updateManyOwners: (args: {
+    data: OwnerUpdateManyMutationInput;
+    where?: OwnerWhereInput;
+  }) => BatchPayloadPromise;
+  upsertOwner: (args: {
+    where: OwnerWhereUniqueInput;
+    create: OwnerCreateInput;
+    update: OwnerUpdateInput;
+  }) => OwnerPromise;
+  deleteOwner: (where: OwnerWhereUniqueInput) => OwnerPromise;
+  deleteManyOwners: (where?: OwnerWhereInput) => BatchPayloadPromise;
 
   /**
    * Subscriptions
@@ -91,6 +127,9 @@ export interface Subscription {
   cat: (
     where?: CatSubscriptionWhereInput
   ) => CatSubscriptionPayloadSubscription;
+  owner: (
+    where?: OwnerSubscriptionWhereInput
+  ) => OwnerSubscriptionPayloadSubscription;
 }
 
 export interface ClientConstructor<T> {
@@ -103,18 +142,31 @@ export interface ClientConstructor<T> {
 
 export type CatOrderByInput = "id_ASC" | "id_DESC" | "name_ASC" | "name_DESC";
 
-export type MutationType = "CREATED" | "UPDATED" | "DELETED";
+export type OwnerOrderByInput = "id_ASC" | "id_DESC" | "name_ASC" | "name_DESC";
 
-export interface CatCreateInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-}
+export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
 export interface CatUpdateInput {
   name?: Maybe<String>;
 }
 
-export interface CatUpdateManyMutationInput {
+export type CatWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface CatUpsertWithWhereUniqueNestedInput {
+  where: CatWhereUniqueInput;
+  update: CatUpdateDataInput;
+  create: CatCreateInput;
+}
+
+export interface OwnerCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  cats?: Maybe<CatCreateManyInput>;
+}
+
+export interface CatUpdateDataInput {
   name?: Maybe<String>;
 }
 
@@ -152,6 +204,11 @@ export interface CatWhereInput {
   NOT?: Maybe<CatWhereInput[] | CatWhereInput>;
 }
 
+export interface CatUpdateWithWhereUniqueNestedInput {
+  where: CatWhereUniqueInput;
+  data: CatUpdateDataInput;
+}
+
 export interface CatSubscriptionWhereInput {
   mutation_in?: Maybe<MutationType[] | MutationType>;
   updatedFields_contains?: Maybe<String>;
@@ -163,80 +220,214 @@ export interface CatSubscriptionWhereInput {
   NOT?: Maybe<CatSubscriptionWhereInput[] | CatSubscriptionWhereInput>;
 }
 
-export type CatWhereUniqueInput = AtLeastOne<{
+export interface CatUpdateManyInput {
+  create?: Maybe<CatCreateInput[] | CatCreateInput>;
+  update?: Maybe<
+    CatUpdateWithWhereUniqueNestedInput[] | CatUpdateWithWhereUniqueNestedInput
+  >;
+  upsert?: Maybe<
+    CatUpsertWithWhereUniqueNestedInput[] | CatUpsertWithWhereUniqueNestedInput
+  >;
+  delete?: Maybe<CatWhereUniqueInput[] | CatWhereUniqueInput>;
+  connect?: Maybe<CatWhereUniqueInput[] | CatWhereUniqueInput>;
+  set?: Maybe<CatWhereUniqueInput[] | CatWhereUniqueInput>;
+  disconnect?: Maybe<CatWhereUniqueInput[] | CatWhereUniqueInput>;
+  deleteMany?: Maybe<CatScalarWhereInput[] | CatScalarWhereInput>;
+  updateMany?: Maybe<
+    CatUpdateManyWithWhereNestedInput[] | CatUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface CatUpdateManyDataInput {
+  name?: Maybe<String>;
+}
+
+export type OwnerWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
+
+export interface OwnerWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  cats_every?: Maybe<CatWhereInput>;
+  cats_some?: Maybe<CatWhereInput>;
+  cats_none?: Maybe<CatWhereInput>;
+  AND?: Maybe<OwnerWhereInput[] | OwnerWhereInput>;
+  OR?: Maybe<OwnerWhereInput[] | OwnerWhereInput>;
+  NOT?: Maybe<OwnerWhereInput[] | OwnerWhereInput>;
+}
+
+export interface CatCreateManyInput {
+  create?: Maybe<CatCreateInput[] | CatCreateInput>;
+  connect?: Maybe<CatWhereUniqueInput[] | CatWhereUniqueInput>;
+}
+
+export interface CatUpdateManyMutationInput {
+  name?: Maybe<String>;
+}
+
+export interface OwnerUpdateInput {
+  name?: Maybe<String>;
+  cats?: Maybe<CatUpdateManyInput>;
+}
+
+export interface CatCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+}
+
+export interface OwnerSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<OwnerWhereInput>;
+  AND?: Maybe<OwnerSubscriptionWhereInput[] | OwnerSubscriptionWhereInput>;
+  OR?: Maybe<OwnerSubscriptionWhereInput[] | OwnerSubscriptionWhereInput>;
+  NOT?: Maybe<OwnerSubscriptionWhereInput[] | OwnerSubscriptionWhereInput>;
+}
+
+export interface CatScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  AND?: Maybe<CatScalarWhereInput[] | CatScalarWhereInput>;
+  OR?: Maybe<CatScalarWhereInput[] | CatScalarWhereInput>;
+  NOT?: Maybe<CatScalarWhereInput[] | CatScalarWhereInput>;
+}
+
+export interface CatUpdateManyWithWhereNestedInput {
+  where: CatScalarWhereInput;
+  data: CatUpdateManyDataInput;
+}
+
+export interface OwnerUpdateManyMutationInput {
+  name?: Maybe<String>;
+}
 
 export interface NodeNode {
   id: ID_Output;
 }
 
-export interface AggregateCat {
-  count: Int;
-}
-
-export interface AggregateCatPromise
-  extends Promise<AggregateCat>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateCatSubscription
-  extends Promise<AsyncIterator<AggregateCat>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface BatchPayload {
-  count: Long;
-}
-
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
-    Fragmentable {
-  count: () => Promise<Long>;
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
-}
-
-export interface CatPreviousValues {
+export interface OwnerPreviousValues {
   id: ID_Output;
   name: String;
 }
 
-export interface CatPreviousValuesPromise
-  extends Promise<CatPreviousValues>,
+export interface OwnerPreviousValuesPromise
+  extends Promise<OwnerPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
 }
 
-export interface CatPreviousValuesSubscription
-  extends Promise<AsyncIterator<CatPreviousValues>>,
+export interface OwnerPreviousValuesSubscription
+  extends Promise<AsyncIterator<OwnerPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
 }
 
-export interface CatEdge {
-  node: Cat;
-  cursor: String;
+export interface Owner {
+  id: ID_Output;
+  name: String;
 }
 
-export interface CatEdgePromise extends Promise<CatEdge>, Fragmentable {
-  node: <T = CatPromise>() => T;
-  cursor: () => Promise<String>;
+export interface OwnerPromise extends Promise<Owner>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  cats: <T = FragmentableArray<Cat>>(args?: {
+    where?: CatWhereInput;
+    orderBy?: CatOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
-export interface CatEdgeSubscription
-  extends Promise<AsyncIterator<CatEdge>>,
+export interface OwnerSubscription
+  extends Promise<AsyncIterator<Owner>>,
     Fragmentable {
-  node: <T = CatSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  cats: <T = Promise<AsyncIterator<CatSubscription>>>(args?: {
+    where?: CatWhereInput;
+    orderBy?: CatOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface OwnerNullablePromise
+  extends Promise<Owner | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  cats: <T = FragmentableArray<Cat>>(args?: {
+    where?: CatWhereInput;
+    orderBy?: CatOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface CatSubscriptionPayload {
@@ -264,6 +455,55 @@ export interface CatSubscriptionPayloadSubscription
   previousValues: <T = CatPreviousValuesSubscription>() => T;
 }
 
+export interface AggregateCat {
+  count: Int;
+}
+
+export interface AggregateCatPromise
+  extends Promise<AggregateCat>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateCatSubscription
+  extends Promise<AsyncIterator<AggregateCat>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface CatEdge {
+  node: Cat;
+  cursor: String;
+}
+
+export interface CatEdgePromise extends Promise<CatEdge>, Fragmentable {
+  node: <T = CatPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface CatEdgeSubscription
+  extends Promise<AsyncIterator<CatEdge>>,
+    Fragmentable {
+  node: <T = CatSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateOwner {
+  count: Int;
+}
+
+export interface AggregateOwnerPromise
+  extends Promise<AggregateOwner>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateOwnerSubscription
+  extends Promise<AsyncIterator<AggregateOwner>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
 export interface Cat {
   id: ID_Output;
   name: String;
@@ -284,27 +524,6 @@ export interface CatSubscription
 export interface CatNullablePromise extends Promise<Cat | null>, Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
-}
-
-export interface CatConnection {
-  pageInfo: PageInfo;
-  edges: CatEdge[];
-}
-
-export interface CatConnectionPromise
-  extends Promise<CatConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<CatEdge>>() => T;
-  aggregate: <T = AggregateCatPromise>() => T;
-}
-
-export interface CatConnectionSubscription
-  extends Promise<AsyncIterator<CatConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<CatEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateCatSubscription>() => T;
 }
 
 export interface PageInfo {
@@ -330,12 +549,131 @@ export interface PageInfoSubscription
   endCursor: () => Promise<AsyncIterator<String>>;
 }
 
-/*
-The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
-*/
-export type String = string;
+export interface CatPreviousValues {
+  id: ID_Output;
+  name: String;
+}
+
+export interface CatPreviousValuesPromise
+  extends Promise<CatPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+}
+
+export interface CatPreviousValuesSubscription
+  extends Promise<AsyncIterator<CatPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+}
+
+export interface BatchPayload {
+  count: Long;
+}
+
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
+    Fragmentable {
+  count: () => Promise<Long>;
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface OwnerEdge {
+  node: Owner;
+  cursor: String;
+}
+
+export interface OwnerEdgePromise extends Promise<OwnerEdge>, Fragmentable {
+  node: <T = OwnerPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OwnerEdgeSubscription
+  extends Promise<AsyncIterator<OwnerEdge>>,
+    Fragmentable {
+  node: <T = OwnerSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface OwnerSubscriptionPayload {
+  mutation: MutationType;
+  node: Owner;
+  updatedFields: String[];
+  previousValues: OwnerPreviousValues;
+}
+
+export interface OwnerSubscriptionPayloadPromise
+  extends Promise<OwnerSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = OwnerPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = OwnerPreviousValuesPromise>() => T;
+}
+
+export interface OwnerSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<OwnerSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = OwnerSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = OwnerPreviousValuesSubscription>() => T;
+}
+
+export interface CatConnection {
+  pageInfo: PageInfo;
+  edges: CatEdge[];
+}
+
+export interface CatConnectionPromise
+  extends Promise<CatConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<CatEdge>>() => T;
+  aggregate: <T = AggregateCatPromise>() => T;
+}
+
+export interface CatConnectionSubscription
+  extends Promise<AsyncIterator<CatConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<CatEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateCatSubscription>() => T;
+}
+
+export interface OwnerConnection {
+  pageInfo: PageInfo;
+  edges: OwnerEdge[];
+}
+
+export interface OwnerConnectionPromise
+  extends Promise<OwnerConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<OwnerEdge>>() => T;
+  aggregate: <T = AggregateOwnerPromise>() => T;
+}
+
+export interface OwnerConnectionSubscription
+  extends Promise<AsyncIterator<OwnerConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<OwnerEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateOwnerSubscription>() => T;
+}
 
 export type Long = string;
+
+/*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+*/
+export type Int = number;
 
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
@@ -344,9 +682,9 @@ export type ID_Input = string | number;
 export type ID_Output = string;
 
 /*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
-export type Int = number;
+export type String = string;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.
@@ -360,6 +698,10 @@ export type Boolean = boolean;
 export const models: Model[] = [
   {
     name: "Cat",
+    embedded: false
+  },
+  {
+    name: "Owner",
     embedded: false
   }
 ];
